@@ -1,0 +1,96 @@
+Table users {
+  id int [pk]
+  user_name varchar
+  password varchar
+  first_name varchar
+  last_name varchar
+  gender varchar
+  date_of_birth date
+  email varchar [unique]
+  mobile_number varchar
+}
+
+Table users_address {
+  id int [pk]
+  user_id int
+  address_type varchar
+  address_line1 varchar
+  address_line2 varchar
+  address_line3 varchar
+  address_line4 varchar
+  city varchar
+  postal varchar
+  state varchar
+  country varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+  total_line_items int
+  subtotal_amount int
+  total_discount int
+  total_amount int
+  invoice_no int
+  shipping_address_id int
+  billing_address_id int
+}
+
+Table order_line_items {
+  id int [pk]
+  order_id int
+  sequence int
+  product_id int
+  price int
+  quantity int
+  amount int
+  discount int
+}
+
+Table products {
+  id int [pk]
+  description varchar
+  price int
+  cost int
+  weight int
+  created_date datetime
+  created_by varchar
+  updated_date datetime
+  updated_by varchar
+}
+
+Table discount_rules {
+  id int [pk]
+  discount_type varchar
+  discount_code varchar
+  start_date datetime
+  end_date datetime
+  amount int
+  percentage int
+}
+
+Table discount_used {
+  id int [pk]
+  order_id int
+  discount_code int
+  user_id int
+  date_entered datetime
+  amount int
+  percentage int
+}
+
+Ref: "users"."id" < "users_address"."user_id"
+
+Ref: "users"."id" < "orders"."user_id"
+
+Ref: "orders"."id" < "order_line_items"."order_id"
+
+Ref: "users_address"."id" < "orders"."shipping_address_id"
+
+Ref: "products"."id" < "order_line_items"."product_id"
+
+Ref: "orders"."billing_address_id" < "users_address"."id"
+
+Ref: "discount_used"."order_id" < "order_line_items"."order_id"
+
+Ref: "discount_rules"."id" < "discount_used"."discount_code"
